@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kassa (demo) — Aurelia Objects</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/aurelia.css">
+</head>
+<body>
+
+<div id="site-header"></div>
+<div class="checkout-banner">Detta är en demo­kassa. Inga riktiga betalningar genomförs och ingen order skickas.</div>
+
+<section>
+  <div class="wrap">
+    <div class="empty-state hidden" id="checkoutEmpty">
+      <h3>Din varukorg är tom.</h3>
+      <p class="lede" style="margin:14px auto 26px;">Lägg till något från kollektionen innan du går till kassan.</p>
+      <a href="produkter.html" class="btn dark">Utforska kollektionen</a>
+    </div>
+
+    <div class="checkout-grid" id="checkoutForm">
+      <div>
+        <div class="checkout-steps">
+          <span class="step">Varukorg</span><span>—</span>
+          <span class="step is-active">Leverans &amp; betalning</span><span>—</span>
+          <span class="step">Bekräftelse</span>
+        </div>
+        <h2 style="margin-bottom:24px;">Leveransuppgifter</h2>
+        <form id="checkoutFormEl">
+          <div class="form-grid">
+            <div class="field"><label>Förnamn</label><input type="text" required></div>
+            <div class="field"><label>Efternamn</label><input type="text" required></div>
+            <div class="field full"><label>E-post</label><input type="email" required></div>
+            <div class="field full"><label>Adress</label><input type="text" required></div>
+            <div class="field"><label>Postnummer</label><input type="text" required></div>
+            <div class="field"><label>Ort</label><input type="text" required></div>
+          </div>
+
+          <h2 style="margin:40px 0 18px;">Betalning (demo)</h2>
+          <div class="pay-methods">
+            <div class="pay-method is-active" data-pay="kort">Kort</div>
+            <div class="pay-method" data-pay="swish">Swish</div>
+            <div class="pay-method" data-pay="faktura">Faktura</div>
+          </div>
+
+          <button class="btn dark block" id="checkoutSubmit" type="submit">Slutför beställning (demo)</button>
+          <p class="fictional-note">Ingen betalningsinformation skickas eller sparas. Detta är en visuell demonstration av ett kassaflöde.</p>
+        </form>
+      </div>
+
+      <div class="order-summary">
+        <h3 style="margin-bottom:18px;">Din order</h3>
+        <div id="orderSummary"></div>
+      </div>
+    </div>
+
+    <div class="confirm-panel hidden" id="confirmPanel">
+      <div class="confirm-icon">
+        <svg viewBox="0 0 100 100" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M20 52 L42 72 L80 28" stroke="#2C2119" stroke-width="8"/></svg>
+      </div>
+      <span class="eyebrow" style="justify-content:center;">Demo — beställning mottagen</span>
+      <h2 style="margin-top:16px;">Tack för din (demo)beställning!</h2>
+      <p class="lede" style="margin:18px auto 8px;">Ordernummer <strong id="confirmOrderNo"></strong>. Detta är en konceptreferens byggd av NOVA Studio — ingen riktig order har skapats och ingen betalning har genomförts.</p>
+      <a href="produkter.html" class="btn dark" style="margin-top:26px;">Fortsätt handla</a>
+    </div>
+  </div>
+</section>
+
+<div id="site-footer"></div>
+
+<script src="assets/aurelia.js"></script>
+<script>
+  Aurelia.initChrome('kollektion');
+  Aurelia.initCheckoutPage();
+</script>
+</body>
+</html>

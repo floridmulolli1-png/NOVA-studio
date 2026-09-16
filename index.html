@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NOVA Studio — Hemsidor med riktig stomme</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+
+  :root{
+    --ink: #17121F;
+    --ink-2: #1F1929;
+    --panel: #221C2E;
+    --paper: #F5EFE8;
+    --paper-dim: #C6BBCE;
+    --amber: #F0A868;
+    --mint: #93D8C2;
+    --line: rgba(245, 239, 232, 0.09);
+    --font-display: 'Fraunces', serif;
+    --font-body: 'IBM Plex Sans', sans-serif;
+  }
+
+  *{ box-sizing: border-box; }
+  html{ scroll-behavior: smooth; }
+
+  body{
+    margin:0;
+    background: var(--ink);
+    color: var(--paper);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  /* soft ambient glow blobs instead of a technical grid */
+  .glow{
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(110px);
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.35;
+    transform: translateZ(0);
+    will-change: transform;
+  }
+  .glow.g1{ width: 520px; height: 520px; background: var(--amber); top: -180px; right: -120px; }
+  .glow.g2{ width: 460px; height: 460px; background: var(--mint); top: 40%; left: -180px; opacity: 0.22; }
+  .glow.g3{ width: 480px; height: 480px; background: var(--amber); bottom: -220px; right: 10%; opacity: 0.16; }
+
+  ::selection{ background: var(--amber); color: var(--ink); }
+  a{ color: inherit; }
+
+  .wrap{
+    max-width: 1160px;
+    margin: 0 auto;
+    padding: 0 32px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .panel{
+    background: linear-gradient(180deg, rgba(255,255,255,0.035), rgba(255,255,255,0.01));
+    border: 1px solid var(--line);
+    border-radius: 22px;
+  }
+
+  .tag{
+    font-size: 13px;
+    letter-spacing: 0.01em;
+    color: var(--mint);
+    font-weight: 500;
+  }
+
+  /* ---------- header ---------- */
+  header{
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    padding: 22px 20px;
+    transition: padding .35s ease;
+  }
+  .nav{
+    position: relative;
+    transform: translateZ(0);
+    will-change: transform;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    padding: 8px 10px 8px 22px;
+    max-width: 1160px;
+    margin: 0 auto;
+    border-radius: 999px;
+    background: rgba(34, 28, 46, 0.5);
+    backdrop-filter: blur(16px);
+    border: 1px solid var(--line);
+    box-shadow: 0 12px 34px rgba(0,0,0,0.22);
+    transition: background .35s ease, border-color .35s ease, box-shadow .35s ease, padding .35s ease;
+  }
+  .nav::before{
+    content: "";
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(120deg, rgba(240,168,104,0.35), rgba(147,216,194,0.2), transparent 60%);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+  header.is-scrolled{ padding: 12px 20px; }
+  header.is-scrolled .nav{
+    background: rgba(34, 28, 46, 0.78);
+    backdrop-filter: blur(22px);
+    box-shadow: 0 16px 44px rgba(0,0,0,0.34);
+  }
+  .logo{
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 21px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+  }
+  .logo .dot{
+    width: 9px; height: 9px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--amber), var(--mint));
+    display: inline-block;
+  }
+  .nav .links{
+    position: relative;
+    display: flex;
+    gap: 52px;
+    font-size: 13.5px;
+  }
+  .nav .links a{
+    position: relative;
+    display: inline-block;
+    font-family: var(--font-display);
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--paper-dim);
+    text-decoration: none;
+    padding: 9px 0;
+    transition: color .3s ease;
+  }
+  .nav .links a span{ position: relative; }
+  .nav .links a:hover{ color: var(--paper); }
+
+  .nav-actions{ display: flex; align-items: center; gap: 10px; }
+
+  .menu-toggle{
+    display: none;
+    width: 38px; height: 38px;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 5px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--line);
+    border-radius: 50%;
+    cursor: pointer;
+    padding: 0;
+  }
+  .menu-toggle span{
+    display: block;
+    width: 15px; height: 1.5px;
+    background: var(--paper);
+    border-radius: 2px;
+    transition: transform .25s ease, opacity .2s ease;
+  }
+  .menu-toggle.is-open span:nth-child(1){ transform: translateY(3.25px) rotate(45deg); }
+  .menu-toggle.is-open span:nth-child(2){ transform: translateY(-3.25px) rotate(-45deg); }
+
+  .mobile-menu{
+    display: none;
+    flex-direction: column;
+    gap: 2px;
+    position: absolute;
+    top: calc(100% + 10px);
+    left: 0;
+    right: 0;
+    padding: 14px;
+    z-index: 40;
+    border-radius: 20px;
+    background: rgba(34, 28, 46, 0.92);
+    backdrop-filter: blur(18px);
+    box-shadow: 0 14px 40px rgba(0,0,0,0.35);
+  }
+  .mobile-menu.is-open{ display: flex; }
+  .mobile-menu a{
+    text-decoration: none;
+    color: var(--paper-dim);
+    font-size: 15px;
+    padding: 12px 14px;
+    border-radius: 14px;
+    transition: background .2s ease, color .2s ease;
+  }
+  .mobile-menu a:hover{ background: rgba(255,255,255,0.06); color: var(--paper); }
+
+  .btn{
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 14.5px;
+    padding: 11px 22px;
+    border: 1px solid rgba(240,168,104,0.5);
+    border-radius: 999px;
+    color: var(--amber);
+    background: transparent;
+    text-decoration: none;
+    display: inline-block;
+    cursor: pointer;
+    transition: background .2s ease, color .2s ease, box-shadow .2s ease;
+  }
+  .btn:hover{ background: rgba(240,168,104,0.12); box-shadow: 0 0 24px rgba(240,168,104,0.18); }
+  .btn.solid{
+    background: linear-gradient(135deg, var(--amber), #e79157);
+    color: #241505;
+    border-color: transparent;
+  }
+  .btn.solid:hover{ box-shadow: 0 6px 26px rgba(240,168,104,0.35); }
+
+  @media (max-width: 920px){
+    .nav .links{ display: none; }
+    .nav-actions .desktop-cta{ display: none; }
+    .menu-toggle{ display: flex; }
+    header{ padding: 16px 20px; }
+    header.is-scrolled{ padding: 12px 20px; }
+  }
+
+  /* ---------- hero ---------- */
+  .hero{ position: relative; padding: 90px 0 60px; }
+  .hero-grid{
+    display: grid;
+    grid-template-columns: 1.05fr 0.95fr;
+    gap: 44px;
+    align-items: center;
+  }
+  @media (max-width: 900px){ .hero-grid{ grid-template-columns: 1fr; } }
+
+  h1{
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(38px, 5vw, 58px);
+    line-height: 1.08;
+    letter-spacing: -0.01em;
+    margin: 18px 0 22px;
+  }
+  h1 em{
+    font-style: italic;
+    color: var(--amber);
+  }
+  .lede{
+    font-size: 18px;
+    color: var(--paper-dim);
+    max-width: 46ch;
+    margin: 0 0 34px;
+  }
+  .hero-ctas{ display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
+  .hero-note{ font-size: 13px; color: var(--paper-dim); opacity: 0.75; }
+
+  .hero-scene{
+    position: relative;
+    aspect-ratio: 1 / 1;
+    max-height: 480px;
+    border-radius: 32px;
+    overflow: hidden;
+    background: radial-gradient(circle at 50% 45%, rgba(240,168,104,0.09), transparent 65%);
+  }
+  #hero-canvas{ width: 100%; height: 100%; display: block; }
+
+  /* ---------- section shell ---------- */
+  section{ padding: 100px 0; position: relative; z-index: 1; content-visibility: auto; contain-intrinsic-size: 0 600px; }
+  .hero{ content-visibility: visible; } /* never skip the above-the-fold hero */
+  .section-head{
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 24px;
+    margin-bottom: 52px;
+    flex-wrap: wrap;
+  }
+  h2{
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(28px, 3.4vw, 38px);
+    letter-spacing: -0.01em;
+    margin: 10px 0 0;
+  }
+  .section-desc{ max-width: 40ch; color: var(--paper-dim); font-size: 15.5px; }
+
+  /* ---------- services ---------- */
+  .services{ display: flex; flex-direction: column; }
+  .service-row{
+    display: grid;
+    grid-template-columns: 64px 1fr;
+    gap: 26px;
+    align-items: flex-start;
+    padding: 32px 0;
+    border-top: 1px solid var(--line);
+  }
+  .service-row:last-child{ border-bottom: 1px solid var(--line); }
+  .service-icon{
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(240,168,104,0.28), rgba(147,216,194,0.12));
+    margin-top: 4px;
+  }
+  .service-body h3{
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 18px;
+    letter-spacing: -0.005em;
+    margin: 0 0 8px;
+  }
+  .service-body p{ color: var(--paper-dim); font-size: 15px; margin: 0; max-width: 56ch; }
+  @media (max-width: 560px){
+    .service-row{ grid-template-columns: 1fr; gap: 12px; }
+  }
+
+  /* ---------- process ---------- */
+  .process{ display: flex; flex-direction: column; gap: 0; }
+  .step{
+    display: grid;
+    grid-template-columns: 90px 1fr;
+    gap: 24px;
+    padding: 28px 0;
+    border-top: 1px solid var(--line);
+    align-items: center;
+  }
+  .step:last-child{ border-bottom: 1px solid var(--line); }
+  .step .num{
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 0.04em;
+    color: var(--mint);
+    opacity: 0.85;
+  }
+  .step h3{
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 17px;
+    letter-spacing: -0.005em;
+    margin: 0 0 6px;
+  }
+  .step p{ color: var(--paper-dim); font-size: 14.5px; margin:0; max-width: 60ch; }
+  .step-body{ display:flex; flex-direction: column; }
+  @media (max-width: 600px){ .step{ grid-template-columns: 1fr; gap: 6px; } }
+
+  /* ---------- work / soft tilt cards ---------- */
+  .work-grid{ display: grid; grid-template-columns: repeat(3, 1fr); gap: 34px; }
+  @media (max-width: 900px){ .work-grid{ grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 600px){ .work-grid{ grid-template-columns: 1fr; } }
+
+  .work-card{
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+    transform-style: preserve-3d;
+    transition: transform .15s ease-out;
+    will-change: transform;
+  }
+  .work-thumb{
+    aspect-ratio: 4/3;
+    margin-bottom: 18px;
+    border-radius: 20px;
+    overflow: hidden;
+    background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.06), transparent 70%);
+    box-shadow: 0 24px 50px rgba(0,0,0,0.3);
+    transition: box-shadow .2s ease;
+  }
+  .work-card:hover .work-thumb{ box-shadow: 0 30px 60px rgba(0,0,0,0.4); }
+  .work-thumb canvas{ width: 100%; height: 100%; display: block; }
+  .work-card h3{ font-family: var(--font-body); font-size: 16px; font-weight: 600; letter-spacing: -0.005em; margin: 0 0 4px; }
+  .work-card p{ color: var(--paper-dim); font-size: 13px; margin: 0; }
+  .work-badge{
+    display: inline-block;
+    font-size: 10.5px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--amber);
+    border: 1px solid rgba(240,168,104,0.4);
+    border-radius: 999px;
+    padding: 3px 10px;
+    margin-bottom: 10px;
+  }
+  .work-desc{ margin-top: 6px !important; line-height: 1.5; }
+  .work-cta{ display: inline-block; margin-top: 12px; font-size: 12.5px; color: var(--amber); letter-spacing: 0.02em; }
+
+  /* ---------- contact ---------- */
+  .contact-grid{ display: grid; grid-template-columns: 1fr 1fr; gap: 60px; }
+  @media (max-width: 860px){ .contact-grid{ grid-template-columns: 1fr; gap: 40px; } }
+  .field{ margin-bottom: 18px; }
+  .field label{ display:block; font-size: 13px; color: var(--mint); margin-bottom: 8px; }
+  .field input, .field textarea{
+    width: 100%;
+    background: var(--ink-2);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    color: var(--paper);
+    font-family: var(--font-body);
+    font-size: 14.5px;
+    padding: 13px 16px;
+    outline: none;
+    transition: border-color .2s ease;
+  }
+  .field input:focus, .field textarea:focus{ border-color: var(--mint); }
+  .field textarea{ resize: vertical; min-height: 100px; }
+
+  footer{
+    border-top: 1px solid var(--line);
+    padding: 34px 0;
+    font-size: 13px;
+    color: var(--paper-dim);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    position: relative;
+    z-index: 1;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .work-card{ transition: none; }
+    html{ scroll-behavior: auto; }
+  }
+</style>
+</head>
+<body>
+
+<div class="glow g1"></div>
+<div class="glow g2"></div>
+<div class="glow g3"></div>
+
+<header id="siteHeader">
+  <div class="nav">
+    <a href="#" class="logo"><span class="dot"></span>NOVA Studio</a>
+    <div class="links" id="navLinks">
+      <a href="#tjanster"><span>Tjänster</span></a>
+      <a href="#process"><span>Process</span></a>
+      <a href="#arbeten"><span>Referenser</span></a>
+      <a href="#kontakt"><span>Kontakt</span></a>
+    </div>
+    <div class="nav-actions">
+      <a href="#kontakt" class="btn desktop-cta">Boka samtal</a>
+      <button class="menu-toggle" id="menuToggle" aria-label="Öppna meny" aria-expanded="false">
+        <span></span><span></span>
+      </button>
+    </div>
+    <div class="mobile-menu" id="mobileMenu">
+      <a href="#tjanster">Tjänster</a>
+      <a href="#process">Process</a>
+      <a href="#arbeten">Referenser</a>
+      <a href="#kontakt">Kontakt</a>
+      <a href="#kontakt" class="btn solid" style="text-align:center; margin-top:6px;">Boka samtal</a>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="tag">FÖR FÖRETAG SOM VILL SYNAS</span>
+      <h1>Vi formar stommen<br>bakom er <em>hemsida</em>.</h1>
+      <p class="lede">NOVA Studio är en webbstudio som bygger hemsidor med lika stor omsorg om struktur som om känsla — genomtänkt innehåll, mjuka 3D-upplevelser och ett resultat som känns som ert varumärke, inte ett mallverktyg.</p>
+      <div class="hero-ctas">
+        <a href="#kontakt" class="btn solid">Boka samtal</a>
+        <a href="#arbeten" class="btn">Se referenser</a>
+      </div>
+      <p class="hero-note" style="margin-top:28px;">Över 100 nöjda kunder runt om i hela landet.</p>
+    </div>
+    <div class="hero-scene">
+      <canvas id="hero-canvas"></canvas>
+    </div>
+  </div>
+</section>
+
+<section id="tjanster">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <span class="tag">TJÄNSTER</span>
+        <h2>Från idé till lansering.</h2>
+      </div>
+      <p class="section-desc">Vi tar ett projekt hela vägen — eller går in där ni redan är, med en befintlig sajt eller en halvfärdig idé.</p>
+    </div>
+    <div class="services">
+      <div class="service-row">
+        <div class="service-icon"></div>
+        <div class="service-body">
+          <h3>Företagswebbplatser</h3>
+          <p>Skräddarsydda sajter byggda för konvertering, snabbhet och sökmotorer — inte ett tema från en hylla.</p>
+        </div>
+      </div>
+      <div class="service-row">
+        <div class="service-icon" style="background: linear-gradient(135deg, rgba(147,216,194,0.28), rgba(240,168,104,0.12));"></div>
+        <div class="service-body">
+          <h3>3D & interaktiva upplevelser</h3>
+          <p>Verklig WebGL-teknik: mjuka, levande scener, produktkonfiguratorer och ytor som reagerar på besökaren.</p>
+        </div>
+      </div>
+      <div class="service-row">
+        <div class="service-icon"></div>
+        <div class="service-body">
+          <h3>Drift & vidareutveckling</h3>
+          <p>Vi lämnar inte projektet vid lansering. Löpande underhåll, nya sektioner och prestandaöversyn.</p>
+        </div>
+      </div>
+      <div class="service-row">
+        <div class="service-icon" style="background: linear-gradient(135deg, rgba(147,216,194,0.3), rgba(240,168,104,0.12));"></div>
+        <div class="service-body">
+          <h3>Support</h3>
+          <p>Vill ni slippa tänka på hemsidan helt och hållet? Vi finns tillgängliga alla dagar i veckan och sköter drift, underhåll och uppdateringar åt er löpande — hör av er för en offert.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="process">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <span class="tag">PROCESS</span>
+        <h2>Så går det till, inga överraskningar.</h2>
+      </div>
+      <p class="section-desc">Samma ordning varje gång, så ni alltid vet var projektet står.</p>
+    </div>
+    <div class="process">
+      <div class="step">
+        <span class="num">01 — Ritning</span>
+        <div class="step-body"><h3>Vi kartlägger målet</h3><p>Mål, målgrupp och innehåll läggs fast innan en enda rad kod skrivs.</p></div>
+      </div>
+      <div class="step">
+        <span class="num">02 — Stomme</span>
+        <div class="step-body"><h3>Struktur och form</h3><p>Sidans uppbyggnad och känsla läggs fast i grova drag, för snabb avstämning.</p></div>
+      </div>
+      <div class="step">
+        <span class="num">03 — Byggnation</span>
+        <div class="step-body"><h3>Design möter kod</h3><p>Design och utveckling sker parallellt, med löpande avstämningar hela vägen.</p></div>
+      </div>
+      <div class="step">
+        <span class="num">04 — Leverans</span>
+        <div class="step-body"><h3>Lansering</h3><p>Testning, lansering och överlämning — ni får nycklarna, inte en låst dörr.</p></div>
+      </div>
+      <div class="step">
+        <span class="num">05 — Tillval</span>
+        <div class="step-body"><h3>Löpande support</h3><p>Vill ni att vi fortsätter sköta sidan efter lansering? Finns som tillägg — hör av er för en offert.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="arbeten">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <span class="tag">REFERENSER</span>
+        <h2>Ett urval byggen.</h2>
+      </div>
+    </div>
+    <div class="work-grid">
+      <a class="work-card" data-tilt href="referenser/aurelia-objects/index.html" target="_blank" rel="noopener">
+        <div class="work-thumb"><canvas class="mini-canvas" data-hue="amber"></canvas></div>
+        <span class="work-badge">Konceptprojekt</span>
+        <h3>Aurelia Objects</h3>
+        <p>E-handel / Belysning</p>
+        <p class="work-desc">En modern e-handelsupplevelse där skandinavisk design möter genomtänkt produktpresentation.</p>
+        <span class="work-cta">Utforska projektet →</span>
+      </a>
+      <a class="work-card" data-tilt href="berglund-fors.html" target="_blank" rel="noopener">
+        <div class="work-thumb"><canvas class="mini-canvas" data-hue="mint"></canvas></div>
+        <span class="work-badge">Konceptprojekt</span>
+        <h3>Berglund & Fors</h3>
+        <p>Webbplats / Juridik</p>
+        <p class="work-desc">En advokatbyrå där förtroende är varumärket — lugn typografi, tydlig struktur och en ton som känns trygg utan att bli stel.</p>
+        <span class="work-cta">Utforska projektet →</span>
+      </a>
+      <a class="work-card" data-tilt href="golden-lotus-hem.html" target="_blank" rel="noopener">
+        <div class="work-thumb"><canvas class="mini-canvas" data-hue="mix"></canvas></div>
+        <span class="work-badge">Konceptprojekt</span>
+        <h3>Golden Lotus</h3>
+        <p>Webbplats / Restaurang</p>
+        <p class="work-desc">En elegant restaurangsajt där thailändska smaker möts av lugn, redaktionell design och en meny som gör jobbet.</p>
+        <span class="work-cta">Utforska projektet →</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+
+<section id="kontakt">
+  <div class="wrap contact-grid">
+    <div>
+      <span class="tag">KONTAKT</span>
+      <h2>Berätta om projektet.</h2>
+      <p class="lede" style="margin-top:18px;">Skicka några rader om vad ni behöver, så återkommer vi inom två arbetsdagar med nästa steg.</p>
+      <p class="hero-note">NOVA Studio<br>hello@novastudio.se</p>
+    </div>
+    <form class="panel" style="padding:34px;" onsubmit="event.preventDefault(); this.querySelector('.btn').textContent='Skickat ✓';">
+      <div class="field">
+        <label>Företag</label>
+        <input type="text" placeholder="Namn på företaget" required>
+      </div>
+      <div class="field">
+        <label>E-post</label>
+        <input type="email" placeholder="namn@foretag.se" required>
+      </div>
+      <div class="field">
+        <label>Om projektet</label>
+        <textarea placeholder="Vad ska sajten göra för er?" required></textarea>
+      </div>
+      <button type="submit" class="btn solid" style="width:100%; border:none; font-size:15px; padding:13px;">Skicka förfrågan</button>
+    </form>
+  </div>
+</section>
+
+<footer class="wrap">
+  <span>© 2026 NOVA Studio</span>
+  <span>Org.nr 559XXX-XXXX</span>
+</footer>
+
+<script>
+// ---------- Non-3D interactions run immediately (cheap, no library needed) ----------
+
+// Header: transparent-to-floating on scroll
+(function(){
+  const header = document.getElementById('siteHeader');
+  if(!header) return;
+  let ticking = false;
+  function onScroll(){
+    if(ticking) return;
+    ticking = true;
+    requestAnimationFrame(()=>{
+      header.classList.toggle('is-scrolled', window.scrollY > 40);
+      ticking = false;
+    });
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+
+// Nav: mobile menu toggle
+(function(){
+  const toggle = document.getElementById('menuToggle');
+  const menu = document.getElementById('mobileMenu');
+  if(!toggle || !menu) return;
+  toggle.addEventListener('click', ()=>{
+    const open = !menu.classList.contains('is-open');
+    menu.classList.toggle('is-open', open);
+    toggle.classList.toggle('is-open', open);
+    toggle.setAttribute('aria-expanded', String(open));
+  });
+  menu.querySelectorAll('a').forEach(a=>{
+    a.addEventListener('click', ()=>{
+      menu.classList.remove('is-open');
+      toggle.classList.remove('is-open');
+      toggle.setAttribute('aria-expanded', 'false');
+    });
+  });
+})();
+
+// Soft tilt effect on work cards
+(function(){
+  document.querySelectorAll('[data-tilt]').forEach(card=>{
+    card.addEventListener('mousemove', e=>{
+      const rect = card.getBoundingClientRect();
+      const x = (e.clientX - rect.left) / rect.width - 0.5;
+      const y = (e.clientY - rect.top) / rect.height - 0.5;
+      card.style.transform = `perspective(800px) rotateY(${x*6}deg) rotateX(${-y*6}deg) translateZ(2px)`;
+    });
+    card.addEventListener('mouseleave', ()=>{
+      card.style.transform = 'perspective(800px) rotateY(0) rotateX(0)';
+    });
+  });
+})();
+
+// ---------- 3D: loaded lazily so it never blocks first paint ----------
+// Quality tier: fewer vertices + lower pixel ratio on small/low-power devices,
+// without visibly changing the look at normal viewing distance.
+const IS_LEAN = window.innerWidth < 760 || (navigator.hardwareConcurrency || 8) <= 4;
+const MAX_DPR = IS_LEAN ? 1 : 2;
+
+function loadThreeJS(cb){
+  if (window.THREE) { cb(); return; }
+  const s = document.createElement('script');
+  s.src = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
+  s.onload = cb;
+  s.onerror = () => {}; // fail silently — page already works without the 3D layer
+  document.body.appendChild(s);
+}
+
+// Kick off the 3D layer once the browser is idle (or after a short fallback delay),
+// so text, layout and nav are fully interactive first.
+function whenIdle(fn){
+  if ('requestIdleCallback' in window) requestIdleCallback(fn, { timeout: 1500 });
+  else setTimeout(fn, 200);
+}
+
+whenIdle(() => loadThreeJS(initHeroScene));
+whenIdle(() => loadThreeJS(initMiniBlobs));
+
+function initHeroScene(){
+  if (typeof THREE === 'undefined') return;
+  const canvas = document.getElementById('hero-canvas');
+  if (!canvas) return;
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 100);
+  camera.position.set(0, 0.3, 5.6);
+
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: !IS_LEAN, alpha: true, powerPreference: 'low-power' });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, MAX_DPR));
+
+  function resize(){
+    const rect = canvas.parentElement.getBoundingClientRect();
+    renderer.setSize(rect.width, rect.height, false);
+    camera.aspect = rect.width / rect.height;
+    camera.updateProjectionMatrix();
+  }
+  window.addEventListener('resize', resize, { passive: true });
+  resize();
+
+  scene.add(new THREE.AmbientLight(0xffffff, 0.5));
+  const key = new THREE.PointLight(0xF0A868, 1.4, 20);
+  key.position.set(3, 3, 4);
+  scene.add(key);
+  const rim = new THREE.PointLight(0x93D8C2, 1.2, 20);
+  rim.position.set(-4, -2, -3);
+  scene.add(rim);
+
+  // organic blob: subdivided icosahedron with per-vertex noise displacement.
+  // Fewer subdivisions on lean devices — visually near-identical, much less per-frame math.
+  const geo = new THREE.IcosahedronGeometry(1.5, IS_LEAN ? 3 : 5);
+  const basePositions = geo.attributes.position.array.slice();
+  const mat = new THREE.MeshStandardMaterial({
+    color: 0xF3E7DA,
+    roughness: 0.35,
+    metalness: 0.05,
+    flatShading: false,
+  });
+  const blob = new THREE.Mesh(geo, mat);
+  scene.add(blob);
+
+  const glowGeo = new THREE.IcosahedronGeometry(1.62, IS_LEAN ? 2 : 4);
+  const glowMat = new THREE.MeshBasicMaterial({
+    color: 0xF0A868,
+    transparent: true,
+    opacity: 0.12,
+    side: THREE.BackSide,
+  });
+  const glow = new THREE.Mesh(glowGeo, glowMat);
+  glow.scale.set(1.12, 1.12, 1.12);
+  scene.add(glow);
+
+  // gentle drifting soft particles — fewer on lean devices
+  const particles = new THREE.Group();
+  const pGeo = new THREE.SphereGeometry(0.035, 8, 8);
+  const particleCount = IS_LEAN ? 12 : 24;
+  for(let i=0;i<particleCount;i++){
+    const hue = Math.random() > 0.5 ? 0xF0A868 : 0x93D8C2;
+    const pMat = new THREE.MeshBasicMaterial({ color: hue, transparent:true, opacity: 0.55 });
+    const p = new THREE.Mesh(pGeo, pMat);
+    const radius = 2.4 + Math.random()*1.1;
+    p.userData = { angle: Math.random()*Math.PI*2, radius, speed: 0.08 + Math.random()*0.1, y: (Math.random()-0.5)*2.8, wob: Math.random()*Math.PI*2 };
+    particles.add(p);
+  }
+  scene.add(particles);
+
+  function noise(x,y,z,t){
+    return Math.sin(x*1.6 + t) * Math.cos(y*1.6 + t*0.8) * Math.sin(z*1.6 + t*0.6);
+  }
+
+  const clock = new THREE.Clock();
+  const pos = geo.attributes.position;
+
+  // Pause the render loop when the tab is hidden or the hero has scrolled off-screen —
+  // saves battery/GPU with zero visible difference (it isn't visible either way).
+  let rafId = null;
+  let running = false;
+  let frameCount = 0;
+
+  function frame(){
+    rafId = requestAnimationFrame(frame);
+    const t = clock.getElapsedTime();
+
+    // The per-vertex noise + normal recompute below is the most expensive work in this
+    // loop. On lean devices the blob's motion is slow enough that updating it at ~30fps
+    // instead of 60fps is imperceptible, while halving the CPU cost on that frame.
+    if(!IS_LEAN || (frameCount++ % 2 === 0)){
+      for(let i=0;i<pos.count;i++){
+        const ix = i*3;
+        const x0 = basePositions[ix], y0 = basePositions[ix+1], z0 = basePositions[ix+2];
+        const len = Math.sqrt(x0*x0+y0*y0+z0*z0) || 1;
+        const nx = x0/len, ny = y0/len, nz = z0/len;
+        const n = noise(nx*2.0, ny*2.0, nz*2.0, t*0.6);
+        const displaced = 1 + n * 0.14;
+        pos.setXYZ(i, x0*displaced, y0*displaced, z0*displaced);
+      }
+      pos.needsUpdate = true;
+      geo.computeVertexNormals();
+    }
+
+    blob.rotation.y = t * 0.15;
+    blob.rotation.x = Math.sin(t*0.2) * 0.08;
+    glow.rotation.copy(blob.rotation);
+
+    particles.children.forEach(p=>{
+      const d = p.userData;
+      const a = d.angle + t*d.speed;
+      const wob = Math.sin(t*0.5 + d.wob) * 0.3;
+      p.position.set(Math.cos(a)*d.radius, d.y + wob, Math.sin(a)*d.radius);
+    });
+
+    renderer.render(scene, camera);
+  }
+  function start(){ if(!running){ running = true; frame(); } }
+  function stop(){ running = false; if(rafId) cancelAnimationFrame(rafId); rafId = null; }
+
+  const io = new IntersectionObserver(([entry]) => {
+    entry.isIntersecting ? start() : stop();
+  }, { threshold: 0.01 });
+  io.observe(canvas);
+
+  document.addEventListener('visibilitychange', () => {
+    document.hidden ? stop() : (io.takeRecords(), start());
+  });
+
+  start();
+}
+
+function initMiniBlobs(){
+  if (typeof THREE === 'undefined') return;
+  document.querySelectorAll('.mini-canvas').forEach(canvas=>{
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 20);
+    camera.position.set(0,0,4.4);
+
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: !IS_LEAN, alpha:true, powerPreference: 'low-power' });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, MAX_DPR));
+
+    function resize(){
+      const rect = canvas.parentElement.getBoundingClientRect();
+      renderer.setSize(rect.width, rect.height, false);
+      camera.aspect = rect.width/rect.height;
+      camera.updateProjectionMatrix();
+    }
+    window.addEventListener('resize', resize, { passive: true });
+    resize();
+
+    scene.add(new THREE.AmbientLight(0xffffff, 0.55));
+    const hue = canvas.dataset.hue;
+    const c1 = hue === 'mint' ? 0x93D8C2 : 0xF0A868;
+    const c2 = hue === 'mix' ? 0x93D8C2 : c1;
+
+    const light1 = new THREE.PointLight(c1, 1.3, 15);
+    light1.position.set(2.5, 2, 3);
+    scene.add(light1);
+    const light2 = new THREE.PointLight(c2, 1.0, 15);
+    light2.position.set(-2.5, -1.5, -2);
+    scene.add(light2);
+
+    const geo = new THREE.IcosahedronGeometry(1.35, IS_LEAN ? 3 : 4);
+    const basePositions = geo.attributes.position.array.slice();
+    const mat = new THREE.MeshStandardMaterial({ color: 0xF3E7DA, roughness: 0.4, metalness: 0.05 });
+    const blob = new THREE.Mesh(geo, mat);
+    scene.add(blob);
+
+    function noise(x,y,z,t){
+      return Math.sin(x*1.8 + t) * Math.cos(y*1.8 + t*0.7) * Math.sin(z*1.8 + t*0.5);
+    }
+
+    const clock = new THREE.Clock();
+    const pos = geo.attributes.position;
+
+    let rafId = null;
+    let running = false;
+    let frameCount = 0;
+
+    function frame(){
+      rafId = requestAnimationFrame(frame);
+      const t = clock.getElapsedTime();
+      if(!IS_LEAN || (frameCount++ % 2 === 0)){
+        for(let i=0;i<pos.count;i++){
+          const ix = i*3;
+          const x0 = basePositions[ix], y0 = basePositions[ix+1], z0 = basePositions[ix+2];
+          const len = Math.sqrt(x0*x0+y0*y0+z0*z0) || 1;
+          const nx = x0/len, ny = y0/len, nz = z0/len;
+          const n = noise(nx*2.2, ny*2.2, nz*2.2, t*0.7);
+          const displaced = 1 + n * 0.16;
+          pos.setXYZ(i, x0*displaced, y0*displaced, z0*displaced);
+        }
+        pos.needsUpdate = true;
+        geo.computeVertexNormals();
+      }
+      blob.rotation.y = t * 0.28;
+      blob.rotation.x = t * 0.12;
+      renderer.render(scene, camera);
+    }
+    function start(){ if(!running){ running = true; frame(); } }
+    function stop(){ running = false; if(rafId) cancelAnimationFrame(rafId); rafId = null; }
+
+    const io = new IntersectionObserver(([entry]) => {
+      entry.isIntersecting ? start() : stop();
+    }, { threshold: 0.01 });
+    io.observe(canvas);
+
+    document.addEventListener('visibilitychange', () => {
+      document.hidden ? stop() : (io.takeRecords(), start());
+    });
+
+    start();
+  });
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inspiration — Aurelia Objects</title>
+<meta name="description" content="Rum att inspireras av — en editorial guide till hur Aurelia Objects belysning tar plats i hemmet.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/aurelia.css">
+<style>
+  .room-row{ display:grid; grid-template-columns: 1.15fr 0.85fr; gap:64px; align-items:center; margin-bottom:120px; }
+  .room-row.reverse{ direction: rtl; }
+  .room-row.reverse > *{ direction: ltr; }
+  .room-row .visual{ aspect-ratio: 4/3; }
+  .room-tag{ font-size:11.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--champagne-2); }
+  .room-row h2{ margin-top:14px; }
+  .room-row p.lede{ margin-top:16px; }
+  .shop-look{ margin-top:26px; }
+  .shop-look-label{ font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:rgba(44,33,25,.5); margin-bottom:12px; }
+  .shop-chip{
+    display:inline-flex; align-items:center; gap:10px; padding:8px 8px 8px 8px; margin:0 10px 10px 0;
+    border:1px solid var(--line); border-radius:999px; font-size:13px; transition:border-color .2s ease;
+  }
+  .shop-chip:hover{ border-color:var(--espresso); }
+  .shop-chip .dot-visual{ width:30px; height:30px; border-radius:50%; }
+  .shop-chip .dot-visual svg{ width:60%; height:60%; }
+  .shop-chip .price{ color:rgba(44,33,25,.55); }
+  @media (max-width: 860px){ .room-row, .room-row.reverse{ grid-template-columns:1fr; direction:ltr; gap:26px; margin-bottom:70px; } }
+</style>
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<section style="padding-bottom:60px;">
+  <div class="wrap">
+    <span class="eyebrow">Inspiration</span>
+    <h1 style="margin-top:16px;max-width:14ch;">Rum att inspireras av.</h1>
+    <p class="lede" style="margin-top:20px;">En editorial guide till hur Aurelia Objects tar plats i hemmet — från vardagsrummets skymning till hallens första intryck.</p>
+  </div>
+</section>
+
+<section style="padding-top:0;">
+  <div class="wrap" id="roomsWrap"></div>
+</section>
+
+<section style="background:var(--espresso);color:var(--ivory);">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div>
+        <span class="eyebrow" style="color:var(--champagne);">Fler stämningar</span>
+        <h2 style="color:var(--ivory);margin-top:14px;">Detaljer värda att dröja vid.</h2>
+      </div>
+    </div>
+    <div class="editorial-grid reveal" id="moodGrid"></div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap" style="text-align:center;">
+    <h2>Redo att forma ditt rum?</h2>
+    <p class="lede" style="margin:16px auto 30px;">Utforska hela kollektionen och hitta den lampa som passar din atmosfär.</p>
+    <a href="produkter.html" class="btn dark">Utforska kollektionen</a>
+  </div>
+</section>
+
+<div id="site-footer"></div>
+
+<script src="assets/aurelia.js"></script>
+<script>
+  Aurelia.initChrome('inspiration');
+
+  var rooms = [
+    {
+      tag: 'Vardagsrummet',
+      title: 'Ljuset i skymningen',
+      text: 'Den böjda armen på Aurelia Arc leder ljuset precis dit du sitter i skymningstimmen, medan Aurelia Dunes travertinsockel ger hyllan tyngd och lugn.',
+      icon: 'floor', dark: true,
+      products: ['aurelia-arc', 'aurelia-dune']
+    },
+    {
+      tag: 'Matplatsen',
+      title: 'Samlad glöd över bordet',
+      text: 'Tre asymmetriska glober i rökfärgat glas samlar sällskapet under ett gemensamt, varmt sken — förstärkt av Aurelia Filaments synliga glödtråd.',
+      icon: 'pendant-cluster', dark: false,
+      products: ['aurelia-drop', 'aurelia-filament']
+    },
+    {
+      tag: 'Sovrummet',
+      title: 'Ett tyst hörn',
+      text: 'Aurelia Ember står lågt och diskret på nattduksbordet, medan Aurelia Muses alabastersken sprider sig mjukt längs väggen mot sänggaveln.',
+      icon: 'table', dark: true,
+      products: ['aurelia-ember', 'aurelia-muse']
+    },
+    {
+      tag: 'Hallen',
+      title: 'Det första intrycket',
+      text: 'En diskret vägglampa vid dörren och en rund takarmatur längre in i hallen skapar en varm, välkomnande övergång från ute till inne.',
+      icon: 'wall', dark: false,
+      products: ['aurelia-muse', 'aurelia-halo']
+    }
+  ];
+
+  var roomsWrap = document.getElementById('roomsWrap');
+  roomsWrap.innerHTML = rooms.map(function(r, i){
+    var chips = r.products.map(function(id){
+      var p = Aurelia.byId(id);
+      return '<a class="shop-chip" href="produkt.html?id='+p.id+'">' +
+        Aurelia.visual({icon:p.icon, className:'dot-visual'}) +
+        '<span>'+p.name+'</span><span class="price">'+Aurelia.money(p.price)+'</span></a>';
+    }).join('');
+    return '<div class="room-row reveal'+(i % 2 === 1 ? ' reverse' : '')+'">' +
+      Aurelia.visual({icon:r.icon, dark:r.dark}) +
+      '<div>' +
+        '<span class="room-tag">'+r.tag+'</span>' +
+        '<h2>'+r.title+'</h2>' +
+        '<p class="lede">'+r.text+'</p>' +
+        '<div class="shop-look">' +
+          '<div class="shop-look-label">Shoppa lamporna i bilden</div>' +
+          chips +
+        '</div>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+
+  var moods = [
+    {icon:'bulb', cls:'span-2', tag:'Detalj', title:'Filamentets glöd'},
+    {icon:'pendant', cls:'span-2', tag:'Form', title:'Opalglasets mjuka sken'},
+    {icon:'floor', cls:'span-2', tag:'Silhuett', title:'Skulptural i dagsljus'}
+  ];
+  document.getElementById('moodGrid').innerHTML = moods.map(function(m){
+    return '<div class="editorial-item '+m.cls+'">' +
+      '<div class="shade"></div>' +
+      '<div class="visual dark" style="border-radius:0;position:absolute;inset:0;">' +
+        '<div class="glow-orb"></div>' + Aurelia.iconSVG(m.icon) +
+      '</div>' +
+      '<div class="cap"><span class="tag">'+m.tag+'</span><h3>'+m.title+'</h3></div>' +
+    '</div>';
+  }).join('');
+
+  Aurelia.observeNew();
+</script>
+</body>
+</html>

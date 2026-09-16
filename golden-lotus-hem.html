@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Golden Lotus — Äkta thailändskt kök i Göteborg</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,500;1,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper: #F8F3EA; --paper-2: #F1E9DA; --ink: #2E2426; --dim: #6B5F5A;
+    --maroon: #7A2140; --maroon-dark: #55172E; --gold: #C9A15A; --rose: #F7DCE0;
+    --line: rgba(46,36,38,0.10);
+  }
+  *{ box-sizing: border-box; }
+  body{ margin:0; background: var(--paper); color: var(--ink); font-family:'Inter', sans-serif; line-height:1.6; }
+  a{ color:inherit; }
+  .wrap{ max-width: 1160px; margin:0 auto; padding: 0 36px; }
+  .maroon{ color: var(--maroon); }
+
+  header{ position: sticky; top:0; z-index:50; background: var(--paper); border-bottom:1px solid var(--line); }
+  .nav{ display:flex; align-items:center; justify-content:space-between; gap:24px; padding: 18px 0; }
+  .logo{ font-family:'Playfair Display', serif; font-style:italic; font-weight:600; font-size:25px; color:var(--maroon); text-decoration:none; line-height:1; display:block; }
+  .logo small{ display:block; font-family:'Inter',sans-serif; font-style:normal; font-size:10px; letter-spacing:0.24em; color:var(--gold); margin-top:4px; font-weight:700; }
+  .nav .links{ display:flex; gap:32px; }
+  .nav .links a{ font-size:14.5px; text-decoration:none; padding:6px 0; border-bottom:2px solid transparent; transition: border-color .2s ease; }
+  .nav .links a:hover, .nav .links a.is-active{ border-color: var(--maroon); }
+  .nav-actions{ display:flex; align-items:center; gap:10px; }
+
+  .menu-toggle{ display:none; width:38px; height:38px; align-items:center; justify-content:center; flex-direction:column; gap:5px; background:none; border:1px solid var(--line); border-radius:50%; cursor:pointer; }
+  .menu-toggle span{ display:block; width:15px; height:1.5px; background:var(--ink); border-radius:2px; transition: transform .25s ease, opacity .2s ease; }
+  .menu-toggle.is-open span:nth-child(1){ transform: translateY(6.5px) rotate(45deg); }
+  .menu-toggle.is-open span:nth-child(2){ opacity:0; }
+  .menu-toggle.is-open span:nth-child(3){ transform: translateY(-6.5px) rotate(-45deg); }
+  .mobile-menu{ display:none; flex-direction:column; padding:8px 0 18px; border-top:1px solid var(--line); }
+  .mobile-menu.is-open{ display:flex; }
+  .mobile-menu a{ padding:13px 4px; font-size:15px; text-decoration:none; border-bottom:1px solid var(--line); }
+  @media (max-width:880px){ .nav .links{ display:none; } .nav-actions .desktop-cta{ display:none; } .menu-toggle{ display:flex; } }
+
+  .btn{ font-family:'Inter',sans-serif; font-weight:600; font-size:14px; padding:13px 26px; border-radius:999px; border:1.5px solid var(--maroon); text-decoration:none; display:inline-block; cursor:pointer; transition: all .2s ease; }
+  .btn.solid{ background:var(--maroon); color:var(--paper); }
+  .btn.solid:hover{ background:var(--maroon-dark); }
+  .btn.outline{ background:transparent; color:var(--maroon); }
+  .btn.outline:hover{ background: rgba(122,33,64,0.07); }
+
+  .hero{ padding: 70px 0 90px; }
+  .hero-grid{ display:grid; grid-template-columns: 1.1fr 0.9fr; gap:60px; align-items:center; }
+  @media (max-width:860px){ .hero-grid{ grid-template-columns:1fr; gap:40px; } }
+  .badge-pill{ display:inline-flex; align-items:center; background:var(--rose); color:var(--maroon); font-size:12px; font-weight:700; letter-spacing:0.04em; padding:9px 18px; border-radius:999px; margin-bottom:24px; }
+  h1.hero-h1{ font-family:'Playfair Display', serif; font-style:italic; font-weight:600; font-size:clamp(32px,4.6vw,50px); color:var(--maroon); margin:0 0 20px; line-height:1.18; }
+  .hero p.lede{ color:var(--dim); font-size:16.5px; line-height:1.8; max-width:52ch; margin-bottom:32px; }
+  .hero-ctas{ display:flex; gap:14px; flex-wrap:wrap; }
+
+  .hero-visual{
+    aspect-ratio:1/1; border-radius:40px; color: var(--paper);
+    background: linear-gradient(135deg, var(--maroon) 0%, var(--maroon) 48%, #C9822F 100%);
+    display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:40px;
+  }
+  .hero-visual svg{ width:60px; height:60px; margin-bottom:22px; }
+  .hero-visual .cap{ font-size:13px; font-weight:700; letter-spacing:0.09em; text-transform:uppercase; margin-bottom:12px; }
+  .hero-visual .note{ font-size:13px; color: rgba(248,243,234,0.78); max-width:26ch; line-height:1.6; }
+
+  .welcome{ padding: 30px 0 100px; }
+  .welcome-grid{ display:grid; grid-template-columns: 1.1fr 0.9fr; gap:50px; background:var(--paper-2); border-radius:28px; padding:50px; }
+  @media (max-width:860px){ .welcome-grid{ grid-template-columns:1fr; gap:32px; padding:34px 26px; } }
+  .welcome h2{ font-family:'Playfair Display', serif; font-style:italic; font-weight:600; font-size:clamp(24px,3vw,30px); color:var(--maroon); margin:0 0 22px; }
+  .welcome ul{ list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:16px; }
+  .welcome li{ display:flex; gap:12px; align-items:flex-start; font-size:15px; }
+  .welcome li::before{ content:""; width:8px; height:8px; border-radius:50%; background:var(--gold); margin-top:7px; flex-shrink:0; }
+  .notice-stack{ display:flex; flex-direction:column; gap:14px; justify-content:center; }
+  .notice{ background:var(--rose); color:var(--maroon); font-weight:700; font-size:13.5px; padding:18px 22px; border-radius:16px; }
+  .welcome-note{ font-size:13.5px; color:var(--dim); margin-top:16px; }
+
+  footer.site{ background:var(--maroon-dark); color:var(--paper); padding:60px 0 28px; margin-top:0; }
+  .footer-grid{ display:grid; grid-template-columns:1.4fr 1fr 1fr; gap:40px; margin-bottom:44px; }
+  @media (max-width:760px){ .footer-grid{ grid-template-columns:1fr 1fr; } }
+  .footer-grid h4{ font-size:12px; letter-spacing:0.1em; text-transform:uppercase; color: rgba(248,243,234,0.55); margin-bottom:16px; }
+  .footer-grid p{ font-size:14px; color: rgba(248,243,234,0.85); line-height:1.7; }
+  .footer-grid ul{ list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:10px; }
+  .footer-grid a{ font-size:14px; color: rgba(248,243,234,0.85); text-decoration:none; }
+  .footer-grid a:hover{ color: var(--paper); }
+  .footer-brand .logo{ color:var(--paper); margin-bottom:12px; }
+  .footer-brand .logo small{ color:var(--gold); }
+  .footer-bottom{ border-top:1px solid rgba(248,243,234,0.15); padding-top:20px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px; font-size:12.5px; color: rgba(248,243,234,0.55); }
+
+  .back-link{ display:block; padding: 12px 36px; color:var(--dim); text-decoration:none; font-size:13px; }
+  .back-link:hover{ color:var(--maroon); }
+</style>
+</head>
+<body>
+
+<a class="back-link" href="index.html">← Byggd av NOVA Studio</a>
+
+<header>
+  <div class="wrap nav">
+    <a href="golden-lotus-hem.html" class="logo">Golden Lotus<small>Restaurang</small></a>
+    <nav class="links" id="navLinks">
+      <a href="golden-lotus-hem.html" class="is-active">Hem</a>
+      <a href="golden-lotus-meny.html">Meny</a>
+      <a href="golden-lotus-om.html">Om oss</a>
+      <a href="golden-lotus-kontakt.html">Öppettider &amp; Kontakt</a>
+      <a href="golden-lotus-karta.html">Karta</a>
+    </nav>
+    <div class="nav-actions">
+      <a href="golden-lotus-meny.html" class="btn solid desktop-cta">Se menyn</a>
+      <button class="menu-toggle" id="menuToggle" aria-label="Öppna meny" aria-expanded="false"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+  <div class="wrap mobile-menu" id="mobileMenu">
+    <a href="golden-lotus-hem.html">Hem</a>
+    <a href="golden-lotus-meny.html">Meny</a>
+    <a href="golden-lotus-om.html">Om oss</a>
+    <a href="golden-lotus-kontakt.html">Öppettider &amp; Kontakt</a>
+    <a href="golden-lotus-karta.html">Karta</a>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="badge-pill">FIRAR 25 ÅR I ÅR</span>
+      <h1 class="hero-h1">Göteborgs bästa Thaimat!</h1>
+      <p class="lede">Restaurang Golden Lotus i Göteborg serverar äkta thailändska smaker lagade av kockar med rötter i Thailand — genuina råvaror, äkta recept och en atmosfär av lugn elegans. Ni är alltid välkomna till vår mysiga restaurang på Storgatan 14.</p>
+      <div class="hero-ctas">
+        <a href="golden-lotus-meny.html" class="btn solid">Visa menyn</a>
+        <a href="tel:0311234567" class="btn outline">Ring 031-123 45 67</a>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M22 58 C22 76, 38 82, 50 82 C62 82, 78 76, 78 58" />
+        <line x1="18" y1="58" x2="82" y2="58" />
+        <path d="M38 44 C34 36, 40 30, 36 22" />
+        <path d="M50 44 C46 36, 52 30, 48 20" />
+        <path d="M62 44 C58 36, 64 30, 60 22" />
+      </svg>
+      <div class="cap">Genuint thailändskt kök</div>
+      <div class="note">Riktig matbild läggs in här — skicka gärna foton från restaurangen.</div>
+    </div>
+  </div>
+</section>
+
+<section class="welcome">
+  <div class="wrap">
+    <div class="welcome-grid">
+      <div>
+        <h2>Välkomna till Golden Lotus!</h2>
+        <ul>
+          <li>Vi har fullständiga rättigheter och skön uteservering!</li>
+          <li>I alla rätter ingår jasminris.</li>
+          <li>De flesta rätterna går att få milda eller starka.</li>
+          <li>Vi kan inte garantera att det inte finns spår av nötter &amp; skaldjur.</li>
+        </ul>
+      </div>
+      <div class="notice-stack">
+        <div class="notice">ALLERGISK? SÄG TILL!</div>
+        <div class="notice">OBS! Vi har för närvarande inte utkörning</div>
+        <p class="welcome-note">Fullständiga rättigheter, mysig uteservering och genuint thailändskt kök mitt i Göteborg.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="site">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="logo">Golden Lotus<small>Restaurang</small></div>
+        <p>Genuint thailändskt kök i hjärtat av Göteborg. Fullständiga rättigheter, uteservering och avhämtning.</p>
+      </div>
+      <div>
+        <h4>Snabblänkar</h4>
+        <ul>
+          <li><a href="golden-lotus-hem.html">Hem</a></li>
+          <li><a href="golden-lotus-meny.html">Meny</a></li>
+          <li><a href="golden-lotus-om.html">Om oss</a></li>
+          <li><a href="golden-lotus-kontakt.html">Öppettider &amp; Kontakt</a></li>
+          <li><a href="golden-lotus-karta.html">Karta</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Kontakt</h4>
+        <p>Storgatan 14, 411 20 Göteborg<br>031-123 45 67<br>Öppettider varierar per dag — se Öppettider &amp; Kontakt.</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Golden Lotus — konceptreferens av NOVA Studio</span>
+      <span>Detta är en demosajt. Adress, telefonnummer och rätter är fiktiva.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  const toggle = document.getElementById('menuToggle');
+  const menu = document.getElementById('mobileMenu');
+  if(!toggle || !menu) return;
+  toggle.addEventListener('click', ()=>{
+    const open = !menu.classList.contains('is-open');
+    menu.classList.toggle('is-open', open);
+    toggle.classList.toggle('is-open', open);
+    toggle.setAttribute('aria-expanded', String(open));
+  });
+})();
+</script>
+
+</body>
+</html>

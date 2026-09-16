@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Produkt — Aurelia Objects</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/aurelia.css">
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<section style="padding-bottom:40px;">
+  <div class="wrap">
+    <div class="breadcrumb" id="breadcrumb"></div>
+    <div class="pdp">
+      <div class="pdp-gallery">
+        <div id="pdpMain"></div>
+        <div class="pdp-thumbs" id="pdpThumbs"></div>
+      </div>
+
+      <div class="pdp-info">
+        <div class="kicker" id="pdpKicker" style="font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--champagne-2);margin-bottom:8px;"></div>
+        <h1 class="pdp-title" id="pdpTitle"></h1>
+        <div class="pdp-price" id="pdpPrice"></div>
+        <div class="stock-line" id="pdpStock"></div>
+        <p class="pdp-desc" id="pdpDesc"></p>
+
+        <div class="option-group">
+          <div class="option-label"><span>Färg</span><span class="selected" id="pdpColorLabel"></span></div>
+          <div class="swatch-row" id="pdpColors"></div>
+        </div>
+
+        <div class="option-group">
+          <div class="option-label"><span>Antal</span></div>
+          <div class="qty-stepper" style="width:fit-content;">
+            <button type="button" id="pdpQtyMinus">−</button>
+            <span id="pdpQty">1</span>
+            <button type="button" id="pdpQtyPlus">+</button>
+          </div>
+        </div>
+
+        <div class="buy-row" id="pdpBuyRow">
+          <button class="btn dark" id="pdpAdd" type="button">Lägg i varukorg</button>
+        </div>
+        <p class="fictional-note">Aurelia Objects är ett konceptprojekt. Produktinformationen ovan är fiktiv och skapad i demonstrationssyfte.</p>
+
+        <div class="accordion" id="pdpAccordion">
+          <div class="accordion-item is-open">
+            <button class="accordion-trigger" type="button">Specifikationer<span class="plus">+</span></button>
+            <div class="accordion-panel"><div class="accordion-panel-inner" id="pdpSpecs"></div></div>
+          </div>
+          <div class="accordion-item">
+            <button class="accordion-trigger" type="button">Material &amp; ytbehandling<span class="plus">+</span></button>
+            <div class="accordion-panel"><div class="accordion-panel-inner" id="pdpMaterialText"></div></div>
+          </div>
+          <div class="accordion-item">
+            <button class="accordion-trigger" type="button">Leverans &amp; retur (demo)<span class="plus">+</span></button>
+            <div class="accordion-panel"><div class="accordion-panel-inner">Fri frakt vid köp över 2 000 kr. 30 dagars öppet köp. Detta är exempeltext för en demosajt — ingen riktig leverans sker.</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="pdpAccessoriesWrap" class="hidden">
+      <div class="mini-title">Fulländar produkten</div>
+      <div class="accessory-row" id="pdpAccessories"></div>
+    </div>
+
+    <div class="mini-title">Relaterade produkter</div>
+    <div class="related-scroller" id="pdpRelated"></div>
+  </div>
+</section>
+
+<div class="sticky-buy" id="stickyBuy">
+  <span class="name" id="stickyName"></span>
+  <span class="price" id="stickyPrice"></span>
+  <button class="btn dark sm" id="stickyAdd" type="button">Lägg i varukorg</button>
+</div>
+
+<div id="site-footer"></div>
+
+<script src="assets/aurelia.js"></script>
+<script>
+  Aurelia.initChrome('kollektion');
+  Aurelia.initProductPage();
+</script>
+</body>
+</html>

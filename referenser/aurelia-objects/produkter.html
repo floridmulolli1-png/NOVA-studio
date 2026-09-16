@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kollektion — Aurelia Objects</title>
+<meta name="description" content="Utforska hela Aurelia Objects kollektion: taklampor, bordslampor, golvlampor, vägglampor och tillbehör.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/aurelia.css">
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<section style="padding-bottom:0;">
+  <div class="wrap">
+    <span class="eyebrow">Kollektion</span>
+    <h1 style="font-size:clamp(32px,5vw,52px);margin-top:16px;">Hela Aurelia Objects.</h1>
+    <p class="lede" style="margin-top:16px;">Sju objekt, fem kategorier — vardera format kring samma idé om varmt, väl avvägt ljus.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="shop-toolbar">
+      <div class="chip-row" id="shopChips"></div>
+      <div class="toolbar-right">
+        <input type="text" id="shopSearch" placeholder="Sök i kollektionen…" class="field" style="border:1px solid var(--line);border-radius:999px;padding:10px 18px;font-family:var(--font-body);font-size:13px;background:var(--ivory);outline:none;min-width:180px;">
+        <select class="select" id="shopSort">
+          <option value="utvalda">Utvalda</option>
+          <option value="pris-lag">Pris: lägst först</option>
+          <option value="pris-hog">Pris: högst först</option>
+          <option value="namn">Namn A–Ö</option>
+        </select>
+        <span class="result-count" id="shopCount"></span>
+      </div>
+    </div>
+    <div class="product-grid" id="shopGrid"></div>
+    <div class="empty-state hidden" id="shopEmpty">
+      <h3>Inga produkter matchade din sökning.</h3>
+      <p class="lede" style="margin:14px auto 0;">Prova ett annat sökord eller rensa filtren.</p>
+    </div>
+  </div>
+</section>
+
+<div id="site-footer"></div>
+
+<script src="assets/aurelia.js"></script>
+<script>
+  Aurelia.initChrome('kollektion');
+  Aurelia.initShopPage();
+</script>
+</body>
+</html>

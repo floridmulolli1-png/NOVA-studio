@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aurelia Objects — Ljus som formar rum</title>
+<meta name="description" content="Aurelia Objects är ett konceptprojekt av NOVA Studio: en exklusiv, skandinavisk e-handel för genomtänkt belysning.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/aurelia.css">
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<section class="hero">
+  <div class="hero-visual">
+    <div class="glow-orb" style="width:58%;height:58%;top:-12%;right:-8%;background:var(--champagne);"></div>
+    <div class="glow-orb" style="width:46%;height:46%;bottom:-14%;left:-8%;background:var(--sand);opacity:.14;animation-delay:-3s;"></div>
+    <div class="hero-lamp" aria-hidden="true">
+      <svg viewBox="0 0 100 100" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="44" y="1" width="12" height="4" rx="2" class="stroke" stroke-width="0.8"/>
+        <line x1="50" y1="5" x2="50" y2="29" class="stroke" stroke-width="0.8"/>
+        <path d="M31 29 H69 L58 54 H42 Z" class="stroke" stroke-width="0.8"/>
+        <circle cx="50" cy="64" r="10" class="fill-champagne" fill-opacity="0.6"/>
+      </svg>
+    </div>
+  </div>
+  <div class="wrap hero-inner">
+    <div class="hero-content">
+      <span class="eyebrow">Aurelia Objects — Konceptkollektion</span>
+      <h1>Ljus som formar <em style="font-style:italic;color:var(--champagne);">rum</em>.</h1>
+      <p class="lede">Upptäck genomtänkt belysning där form, funktion och atmosfär möts.</p>
+      <div class="hero-ctas">
+        <a href="produkter.html" class="btn champagne">Utforska kollektionen</a>
+        <a href="inspiration.html" class="btn ghost" style="color:var(--ivory);border-color:rgba(251,248,244,.35);background:transparent;">Se inspiration</a>
+      </div>
+    </div>
+  </div>
+  <div class="hero-scroll"><span>Scrolla</span><span class="line"></span></div>
+</section>
+
+<section id="kategorier">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div>
+        <span class="eyebrow">Kollektion</span>
+        <h2>Fem sätt att forma ljus.</h2>
+      </div>
+      <p class="lede">Från den stora takarmaturen till den sista detaljen — varje kategori är byggd kring samma idé om lugn, hållbar design.</p>
+    </div>
+    <div class="cat-grid" id="catGrid"></div>
+  </div>
+</section>
+
+<section id="utvalda" style="background:var(--ivory);">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div>
+        <span class="eyebrow">Utvalda produkter</span>
+        <h2>Aktuella favoriter.</h2>
+      </div>
+      <a href="produkter.html" class="btn outline">Se hela kollektionen</a>
+    </div>
+    <div class="product-grid" id="featuredGrid"></div>
+  </div>
+</section>
+
+<section id="inspiration-teaser">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div>
+        <span class="eyebrow">Inspiration</span>
+        <h2>Rum att inspireras av.</h2>
+      </div>
+      <a href="inspiration.html" class="btn outline">Utforska inspiration</a>
+    </div>
+    <div class="editorial-grid reveal">
+      <div class="editorial-item span-4">
+        <div class="shade"></div>
+        <div class="visual dark" style="border-radius:0;position:absolute;inset:0;"><div class="glow-orb" style="width:70%;height:70%;"></div></div>
+        <div class="cap"><span class="tag">Vardagsrum</span><h3>Kvällsljus i espresso &amp; champagne</h3></div>
+      </div>
+      <div class="editorial-item span-2">
+        <div class="shade"></div>
+        <div class="visual dark" style="border-radius:0;position:absolute;inset:0;"><div class="glow-orb" style="width:80%;height:80%;background:var(--sand);"></div></div>
+        <div class="cap"><span class="tag">Matplats</span><h3>Samlad glöd</h3></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="nyheter" style="background:var(--ivory);">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div>
+        <span class="eyebrow">Nyheter</span>
+        <h2>Nyss lanserat.</h2>
+      </div>
+    </div>
+    <div class="product-grid" id="newsGrid"></div>
+  </div>
+</section>
+
+<section id="om-varumarket">
+  <div class="wrap about-grid reveal">
+    <div class="visual dark">
+      <div class="glow-orb"></div>
+      <svg viewBox="0 0 100 100" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="8" y="38" width="7" height="24" rx="2" class="stroke" stroke-width="1.6"/>
+        <line x1="15" y1="50" x2="40" y2="50" class="stroke" stroke-width="1.6"/>
+        <path d="M40 34 H76 L66 64 H48 Z" class="stroke" stroke-width="1.6"/>
+        <circle cx="57" cy="50" r="9" class="fill-champagne" fill-opacity="0.5"/>
+      </svg>
+    </div>
+    <div>
+      <span class="eyebrow">Om varumärket</span>
+      <h2 style="margin-top:16px;">Skandinavisk stillhet, exklusiv känsla.</h2>
+      <p class="lede" style="margin-top:20px;">Aurelia Objects föddes ur idén att belysning inte bara ska lysa upp ett rum — den ska forma det. Vi arbetar med varma material, dämpade kulörer och ett fåtal noga utvalda former, så att varje lampa får ta plats utan att skrika efter uppmärksamhet.</p>
+      <p class="lede" style="margin-top:16px;">Varje objekt är designat för att åldras vackert: mässing som patinerar, linne som mjuknar, sten som får en djupare ton med tiden.</p>
+      <div class="about-stats">
+        <div class="stat"><b>7</b><span>Objekt i kollektionen</span></div>
+        <div class="stat"><b>5</b><span>Kategorier</span></div>
+        <div class="stat"><b>100%</b><span>Konceptdesign</span></div>
+      </div>
+      <div class="fictional-note">Aurelia Objects är ett fiktivt konceptvarumärke skapat av NOVA Studio för att visa hur en modern lyxig belysningsbutik kan se ut. Produkter, priser och lagerstatus är demo­data.</div>
+    </div>
+  </div>
+</section>
+
+<section id="nyhetsbrev">
+  <div class="wrap">
+    <div class="newsletter reveal">
+      <span class="eyebrow" style="justify-content:center;">Nyhetsbrev</span>
+      <h2 style="margin-top:16px;">Bli först med nya kollektioner.</h2>
+      <p class="lede">Få inbjudningar till förhandsvisningar och inspiration direkt i din inkorg. Ingen riktig prenumeration skapas i denna demo.</p>
+      <form class="newsletter-form" id="newsletterForm">
+        <input type="email" placeholder="din@email.se" required>
+        <button class="btn champagne" type="submit">Prenumerera</button>
+      </form>
+      <p class="newsletter-note" id="newsletterNote">Genom att prenumerera godkänner du att vi (i denna demo) inte sparar din e-post någonstans.</p>
+    </div>
+  </div>
+</section>
+
+<div id="site-footer"></div>
+
+<script src="assets/aurelia.js"></script>
+<script>
+  Aurelia.initChrome('hem');
+  Aurelia.renderCategoryGrid(document.getElementById('catGrid'));
+  Aurelia.renderProductGrid(document.getElementById('featuredGrid'),
+    ['aurelia-halo','aurelia-arc','aurelia-dune','aurelia-muse','aurelia-drop','aurelia-ember'].map(Aurelia.byId));
+  Aurelia.renderProductGrid(document.getElementById('newsGrid'),
+    ['aurelia-drop','aurelia-ember','aurelia-filament'].map(Aurelia.byId));
+  Aurelia.observeNew();
+
+  document.getElementById('newsletterForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    document.getElementById('newsletterNote').textContent = 'Tack! (Demo — ingen riktig prenumeration har skapats.)';
+    this.reset();
+  });
+</script>
+</body>
+</html>
