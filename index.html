@@ -691,14 +691,24 @@
 // without visibly changing the look at normal viewing distance.
 const IS_LEAN = window.innerWidth < 760 || (navigator.hardwareConcurrency || 8) <= 4;
 const MAX_DPR = IS_LEAN ? 1 : 2;
+// Cap the render loop instead of letting it follow the display's refresh rate —
+// the blob's motion is slow enough that 30/60fps looks identical to 90-144fps,
+// while cutting GPU work substantially on high-refresh phones.
+const FRAME_BUDGET = 1000 / (IS_LEAN ? 30 : 60);
 
+let threeLoadPromise = null;
 function loadThreeJS(cb){
   if (window.THREE) { cb(); return; }
-  const s = document.createElement('script');
-  s.src = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
-  s.onload = cb;
-  s.onerror = () => {}; // fail silently — page already works without the 3D layer
-  document.body.appendChild(s);
+  if (!threeLoadPromise){
+    threeLoadPromise = new Promise(resolve => {
+      const s = document.createElement('script');
+      s.src = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
+      s.onload = resolve;
+      s.onerror = () => {}; // fail silently — page already works without the 3D layer
+      document.body.appendChild(s);
+    });
+  }
+  threeLoadPromise.then(cb);
 }
 
 // Kick off the 3D layer once the browser is idle (or after a short fallback delay),
@@ -789,28 +799,28 @@ function initHeroScene(){
   // saves battery/GPU with zero visible difference (it isn't visible either way).
   let rafId = null;
   let running = false;
-  let frameCount = 0;
+  let lastFrameTime = 0;
 
-  function frame(){
+  function frame(now){
     rafId = requestAnimationFrame(frame);
+    // Skip the whole frame (vertex noise + render) until the target budget has
+    // elapsed, instead of rendering at whatever refresh rate the display offers.
+    if (now - lastFrameTime < FRAME_BUDGET) return;
+    lastFrameTime = now;
+
     const t = clock.getElapsedTime();
 
-    // The per-vertex noise + normal recompute below is the most expensive work in this
-    // loop. On lean devices the blob's motion is slow enough that updating it at ~30fps
-    // instead of 60fps is imperceptible, while halving the CPU cost on that frame.
-    if(!IS_LEAN || (frameCount++ % 2 === 0)){
-      for(let i=0;i<pos.count;i++){
-        const ix = i*3;
-        const x0 = basePositions[ix], y0 = basePositions[ix+1], z0 = basePositions[ix+2];
-        const len = Math.sqrt(x0*x0+y0*y0+z0*z0) || 1;
-        const nx = x0/len, ny = y0/len, nz = z0/len;
-        const n = noise(nx*2.0, ny*2.0, nz*2.0, t*0.6);
-        const displaced = 1 + n * 0.14;
-        pos.setXYZ(i, x0*displaced, y0*displaced, z0*displaced);
-      }
-      pos.needsUpdate = true;
-      geo.computeVertexNormals();
+    for(let i=0;i<pos.count;i++){
+      const ix = i*3;
+      const x0 = basePositions[ix], y0 = basePositions[ix+1], z0 = basePositions[ix+2];
+      const len = Math.sqrt(x0*x0+y0*y0+z0*z0) || 1;
+      const nx = x0/len, ny = y0/len, nz = z0/len;
+      const n = noise(nx*2.0, ny*2.0, nz*2.0, t*0.6);
+      const displaced = 1 + n * 0.14;
+      pos.setXYZ(i, x0*displaced, y0*displaced, z0*displaced);
     }
+    pos.needsUpdate = true;
+    geo.computeVertexNormals();
 
     blob.rotation.y = t * 0.15;
     blob.rotation.x = Math.sin(t*0.2) * 0.08;
@@ -825,7 +835,7 @@ function initHeroScene(){
 
     renderer.render(scene, camera);
   }
-  function start(){ if(!running){ running = true; frame(); } }
+  function start(){ if(!running){ running = true; rafId = requestAnimationFrame(frame); } }
   function stop(){ running = false; if(rafId) cancelAnimationFrame(rafId); rafId = null; }
 
   const io = new IntersectionObserver(([entry]) => {
@@ -886,29 +896,31 @@ function initMiniBlobs(){
 
     let rafId = null;
     let running = false;
-    let frameCount = 0;
+    let lastFrameTime = 0;
 
-    function frame(){
+    function frame(now){
       rafId = requestAnimationFrame(frame);
+      if (now - lastFrameTime < FRAME_BUDGET) return;
+      lastFrameTime = now;
+
       const t = clock.getElapsedTime();
-      if(!IS_LEAN || (frameCount++ % 2 === 0)){
-        for(let i=0;i<pos.count;i++){
-          const ix = i*3;
-          const x0 = basePositions[ix], y0 = basePositions[ix+1], z0 = basePositions[ix+2];
-          const len = Math.sqrt(x0*x0+y0*y0+z0*z0) || 1;
-          const nx = x0/len, ny = y0/len, nz = z0/len;
-          const n = noise(nx*2.2, ny*2.2, nz*2.2, t*0.7);
-          const displaced = 1 + n * 0.16;
-          pos.setXYZ(i, x0*displaced, y0*displaced, z0*displaced);
-        }
-        pos.needsUpdate = true;
-        geo.computeVertexNormals();
+      for(let i=0;i<pos.count;i++){
+        const ix = i*3;
+        const x0 = basePositions[ix], y0 = basePositions[ix+1], z0 = basePositions[ix+2];
+        const len = Math.sqrt(x0*x0+y0*y0+z0*z0) || 1;
+        const nx = x0/len, ny = y0/len, nz = z0/len;
+        const n = noise(nx*2.2, ny*2.2, nz*2.2, t*0.7);
+        const displaced = 1 + n * 0.16;
+        pos.setXYZ(i, x0*displaced, y0*displaced, z0*displaced);
       }
+      pos.needsUpdate = true;
+      geo.computeVertexNormals();
+
       blob.rotation.y = t * 0.28;
       blob.rotation.x = t * 0.12;
       renderer.render(scene, camera);
     }
-    function start(){ if(!running){ running = true; frame(); } }
+    function start(){ if(!running){ running = true; rafId = requestAnimationFrame(frame); } }
     function stop(){ running = false; if(rafId) cancelAnimationFrame(rafId); rafId = null; }
 
     const io = new IntersectionObserver(([entry]) => {
