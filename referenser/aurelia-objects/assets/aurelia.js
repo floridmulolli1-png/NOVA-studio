@@ -1,5 +1,5 @@
 /* =========================================================
-   AURELIA OBJECTS — konceptreferens byggd av NOVA Studio.
+   AURELIA OBJECTS — konceptreferens byggd av Limuna Studio.
    All produktdata är fiktiv/skapad för demo och beskriver
    inte riktiga LuminaHome-produkter.
    ========================================================= */
@@ -362,8 +362,8 @@ window.Aurelia = (function () {
     }
     return (
       '<div class="demo-ribbon">' +
-        '<strong>AURELIA OBJECTS</strong> — konceptprojekt i NOVA Studios referensportfölj. Inga riktiga betalningar genomförs. ' +
-        '<a href="../../index.html#arbeten">Till NOVA Studio →</a>' +
+        '<strong>AURELIA OBJECTS</strong> — konceptprojekt i Limuna Studios referensportfölj. Inga riktiga betalningar genomförs. ' +
+        '<a href="../../index.html#arbeten">Till Limuna Studio →</a>' +
       "</div>" +
       '<header class="site" id="siteHeader"><div class="wrap nav">' +
         '<a href="index.html" class="logo">Aurelia<small>Objects</small></a>' +
@@ -397,7 +397,7 @@ window.Aurelia = (function () {
         '<div class="footer-grid">' +
           '<div class="footer-brand">' +
             '<div class="logo">Aurelia<small>Objects</small></div>' +
-            '<p>Genomtänkt belysning där form, funktion och atmosfär möts. Ett konceptprojekt framtaget av NOVA Studio.</p>' +
+            '<p>Genomtänkt belysning där form, funktion och atmosfär möts. Ett konceptprojekt framtaget av Limuna Studio.</p>' +
           "</div>" +
           '<div><h4>Kollektion</h4><ul>' +
             CATEGORIES.map(function (c) { return '<li><a href="produkter.html?kategori=' + c.slug + '">' + c.label + "</a></li>"; }).join("") +
@@ -415,7 +415,7 @@ window.Aurelia = (function () {
           "</ul></div>" +
         "</div>" +
         '<div class="footer-bottom">' +
-          '<span>© 2026 Aurelia Objects — konceptreferens av NOVA Studio</span>' +
+          '<span>© 2026 Aurelia Objects — konceptreferens av Limuna Studio</span>' +
           '<span>Detta är en demosajt. Inga produkter säljs på riktigt.</span>' +
         "</div>" +
       "</div></footer>"
