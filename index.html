@@ -608,20 +608,25 @@
       <p class="lede" style="margin-top:18px;">Skicka några rader om vad ni behöver, så återkommer vi inom två arbetsdagar med nästa steg.</p>
       <p class="hero-note">Limuna Studio<br>hello@limunastudio.se</p>
     </div>
-    <form class="panel" style="padding:34px;" onsubmit="event.preventDefault(); this.querySelector('.btn').textContent='Skickat ✓';">
+    <form class="panel" id="contactForm" style="padding:34px;">
+      <input type="hidden" name="access_key" value="efaa102a-9df4-4dd1-935d-a746dce37775">
+      <input type="hidden" name="subject" value="Ny förfrågan från limunastudio.se">
+      <input type="hidden" name="from_name" value="Limuna Studio — kontaktformulär">
+      <input type="checkbox" name="botcheck" style="display:none" tabindex="-1" autocomplete="off">
       <div class="field">
         <label>Företag</label>
-        <input type="text" placeholder="Namn på företaget" required>
+        <input type="text" name="name" placeholder="Namn på företaget" required>
       </div>
       <div class="field">
         <label>E-post</label>
-        <input type="email" placeholder="namn@foretag.se" required>
+        <input type="email" name="email" placeholder="namn@foretag.se" required>
       </div>
       <div class="field">
         <label>Om projektet</label>
-        <textarea placeholder="Vad ska sajten göra för er?" required></textarea>
+        <textarea name="message" placeholder="Vad ska sajten göra för er?" required></textarea>
       </div>
       <button type="submit" class="btn solid" style="width:100%; border:none; font-size:15px; padding:13px;">Skicka förfrågan</button>
+      <p id="contactFormNote" style="font-size:13px; color:var(--paper-dim); margin:14px 0 0; min-height:1.2em;"></p>
     </form>
   </div>
 </section>
@@ -668,6 +673,43 @@
       toggle.classList.remove('is-open');
       toggle.setAttribute('aria-expanded', 'false');
     });
+  });
+})();
+
+// Contact form: submit to Web3Forms, deliver to Kontakt@limuna.se
+(function(){
+  const form = document.getElementById('contactForm');
+  if(!form) return;
+  const btn = form.querySelector('button[type="submit"]');
+  const note = document.getElementById('contactFormNote');
+  const btnDefaultText = btn.textContent;
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    btn.disabled = true;
+    btn.textContent = 'Skickar…';
+    note.textContent = '';
+    note.style.color = 'var(--paper-dim)';
+
+    try {
+      const res = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify(Object.fromEntries(new FormData(form)))
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) throw new Error(data.message || 'Okänt fel');
+
+      btn.textContent = 'Skickat ✓';
+      note.textContent = 'Tack! Vi återkommer inom två arbetsdagar.';
+      form.reset();
+      setTimeout(() => { btn.textContent = btnDefaultText; btn.disabled = false; }, 5000);
+    } catch (err) {
+      btn.textContent = btnDefaultText;
+      btn.disabled = false;
+      note.style.color = 'var(--amber)';
+      note.textContent = 'Något gick fel. Mejla oss gärna direkt på hello@limunastudio.se istället.';
+    }
   });
 })();
 
